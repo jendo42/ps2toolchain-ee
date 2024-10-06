@@ -53,13 +53,15 @@ PROC_NR=$(getconf _NPROCESSORS_ONLN)
 ## For each target...
 for TARGET in "mips64r5900el-ps2-elf"; do
   ## Create and enter the toolchain/build directory
-  rm -rf "build-$TARGET"
-  mkdir "build-$TARGET"
-  cd "build-$TARGET"
+  mkdir -p "build-nano-$TARGET"
+  cd "build-nano-$TARGET"
 
   ## Configure the build.
   CFLAGS_FOR_TARGET="$TARGET_CFLAGS" \
   ../configure \
+    --quiet \
+    --no-recursion \
+    --cache-file=build.cache \
     --prefix="$PS2DEV_TMP/$TARGET_ALIAS" \
     --target="$TARGET" \
     --with-sysroot="$PS2DEV/$TARGET_ALIAS/$TARGET" \
@@ -82,7 +84,6 @@ for TARGET in "mips64r5900el-ps2-elf"; do
   ## Compile and install.
   make --quiet -j "$PROC_NR" all
   make --quiet -j "$PROC_NR" install-strip
-  make --quiet -j "$PROC_NR" clean
 
   ## Copy & rename manually libc, libg and libm to libc-nano, libg-nano and libm-nano
   mv "$PS2DEV_TMP/$TARGET_ALIAS/$TARGET/lib/libc.a" "$PS2DEV/$TARGET_ALIAS/$TARGET/lib/libc_nano.a"

@@ -46,7 +46,6 @@ for TARGET in "mips64r5900el-ps2-elf"; do
   ## Compile and install.
   make --quiet -j "$PROC_NR" all
   make --quiet -j "$PROC_NR" install
-  make --quiet -j "$PROC_NR" clean
 
   ## Exit the build directory.
   cd ../..

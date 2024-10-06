@@ -57,8 +57,7 @@ PROC_NR=$(getconf _NPROCESSORS_ONLN)
 ## For each target...
 for TARGET in "mips64r5900el-ps2-elf"; do
   ## Create and enter the toolchain/build directory
-  rm -rf "build-$TARGET-stage2"
-  mkdir "build-$TARGET-stage2"
+  mkdir -p "build-$TARGET-stage2"
   cd "build-$TARGET-stage2"
 
   ## Configure the build.
@@ -66,6 +65,8 @@ for TARGET in "mips64r5900el-ps2-elf"; do
   CXXFLAGS_FOR_TARGET="$TARGET_CFLAGS" \
   ../configure \
     --quiet \
+    --no-recursion \
+    --cache-file=build.cache \
     --prefix="$PS2DEV/$TARGET_ALIAS" \
     --target="$TARGET" \
     --enable-languages="c,c++" \
@@ -84,7 +85,6 @@ for TARGET in "mips64r5900el-ps2-elf"; do
   ## Compile and install.
   make --quiet -j "$PROC_NR" all
   make --quiet -j "$PROC_NR" install-strip
-  make --quiet -j "$PROC_NR" clean
 
   ## Exit the build directory.
   cd ..
